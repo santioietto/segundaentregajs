@@ -1,5 +1,5 @@
 
-// Variables generales
+// Variables globales
 let buscar = null
 let acumular = 0
 let msjgeneral = ""
@@ -11,6 +11,16 @@ usuario.push(new Logearte("Santi", "santi111", "s@gmail.com"));
 usuario.push(new Logearte("Agustin", "agus222", "agus@gmail.com"));
 usuario.push(new Logearte("Octavio", "octi333", "octim@gmail.com"));
 
+// // Creo array vacio para utulizarlo como carrito
+let carrito = new Array();
+
+// Creo array vacio y pusheo los datos de los productos en stock
+let stock = new Array();
+stock.push(new Stock(stock.length + 1, "Semillas ", 5000));
+stock.push(new Stock(stock.length + 1, "Insecticidas ", 6000));
+stock.push(new Stock(stock.length + 1, "Herbicida ", 5000));
+stock.push(new Stock(stock.length + 1, "Deposito ", 4000));
+stock.push(new Stock(stock.length + 1, "Tratamiento ", 2000));
 
 // Inicio mensaje
 let inicio = alert("Bienvenidos a nuestro sitio \n \n Por favor logearte para continuar")
@@ -36,19 +46,6 @@ function ingreso() {
 ingreso();
 
 
-
-// // Creo base de datos de productos sobre un array vacio
-let carrito = new Array();
-
-
-let stock = new Array();
-stock.push(new Stock(stock.length + 1, "Semillas ", 5000));
-stock.push(new Stock(stock.length + 1, "Insecticidas ", 6000));
-stock.push(new Stock(stock.length + 1, "Herbicida ", 5000));
-stock.push(new Stock(stock.length + 1, "Deposito ", 4000));
-stock.push(new Stock(stock.length + 1, "Tratamiento ", 2000));
-
-
 // Una vez que ingresa el usuario correcto, puede realizar tareas en el carrito
 
 if (vamos) {
@@ -59,7 +56,8 @@ if (vamos) {
     // Genero un ciclo while para cara accion
     while (check) {
         let respuesta = parseInt(prompt(mensaje))
-        
+
+        // Utilizo el switch para cada caso que tiene el menu
         switch (respuesta) {           
             case 1:
                 agregarproducto();
@@ -97,6 +95,7 @@ if (vamos) {
 
     }
 } else {
+    // Si el usuario agoto el numero de intentos para logear le muestro el alert
     alert("Recargue la pagina para desbloquear")
 }
 
@@ -130,17 +129,18 @@ function agregarproducto() {
 
 // funcion para elimnar producto
 function eliminarproducto() {
-
+    // Valido si el array carrito tiene algun elemento si no le muestro el msj
     if (carrito.length == 0) {
         alert("No tienes ningun producto para eliminar")
         return;
     } else {
+        // Una vez encontrado los producto paso a seleccionar y eliminar
         opciones = parseInt(prompt("Elija el id del producto a eliminar del carrito: \n" + msjgeneral + "\n" + "El total es: $" + acumular))
         if (isNaN(opciones)) {
             alert("No ingresaste un numero")
             return;
         }
-
+        // Realizo un for donde utilizo el metodo splice para que elimine el producto que seleccione
         for (let i = 0; i < carrito.length; i++) {
 
             if (carrito[i].id == opciones) {
@@ -149,28 +149,30 @@ function eliminarproducto() {
 
                 let descuentoprecio = stock.find(e => e.id == opciones)
                 acumular -= descuentoprecio.precio
+                // creo una variable booleana iniciada en true
                 devolucion = true
                 i = carrito.length + 1;
             } else {
                 devolucion = false;
             }
         }
-
+        // valido la variable en falso para que me muestre que el codigo ingresado no existe
         if (!devolucion) {
             alert("El codigo ingresado no esta en el carrito o no existe")
         }
     }
 
     msjgeneral = ""
-
+    // realizo un foreach para recorrer el array carrito que esta sin el producto eliminado
     carrito.forEach(e => msjgeneral += e.datosproducto());
     alert(msjgeneral + "\n" + acumular)
 
 }
 
+// funcion ver carrito
 function vercarrito() {
     msjgeneral = ""
-
+    // realizo un foreach para recorrer el array carrito para que me muestre los productos hasta el momento
     carrito.forEach(e => msjgeneral += e.datosproducto());
     alert(msjgeneral + "\n" + "Total sin descuento: $" + acumular + "\n" + "Total con descuento: $" + total)
 
@@ -178,15 +180,17 @@ function vercarrito() {
 
 // funcion para terminar la compra
 function realizarcompra() {
+    // valido la funcion
     if (!carrito.length == 0) {
+        // diferencio si el producto ingresa por descuento
         if (total) {
-            compra = confirm("Compra con descuento: \n" + msjgeneral + "\n" + "Precio total: $" + total + "\n" + "\n" + "Desea terminar la compra?");
-
+            compra = confirm("Compra con descuento: \n" + msjgeneral + "\n" + "Precio total: $" + total + "\n" + "\n" + "Desea terminar la compra?");           
             if (compra) {
                 document.write("<br>" + msjgeneral + "<br>Total: $" + total + "<br> Gracias por elegirnos! <br> ¡Te esperamos pronto!")
                 return false;
             }
         } else {
+            // Si no va ingresar como compra y muestra el valor real del producto
             compra = confirm("Compra total: \n" + msjgeneral + "Total: $" + acumular + "\n" + "\n" + "Desea terminar la compra?");
             if (compra) {
                 document.write("<br>" + msjgeneral + "<br>Total: $" + acumular + "<br> Gracias por elegirnos! <br> ¡Te esperamos pronto!")
@@ -197,6 +201,7 @@ function realizarcompra() {
 
 
     } else {
+        // muestro que el carrito este vacio
         alert("El carrito esta vacio!")
         return true;
     }
@@ -206,6 +211,7 @@ function realizarcompra() {
 // funcion para el caso de descuento
 function descuento() {
     msjgeneral = ""
+    // realizo la validacion para ver si hay elementos en el array carrito
     if (carrito.length == 0) {
         alert("No tienes productos agregados al carrito")
     } else {
